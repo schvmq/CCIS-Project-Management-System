@@ -13,6 +13,19 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * DEV-ONLY: Temporary mock user for Day 1 frontend preview without backend authentication.
+ * TODO: Remove when authentication endpoints are connected in Week 1.
+ */
+const DEV_MOCK_USER: User = {
+  id: 'dev-user-01',
+  email: 'faculty@university.edu',
+  firstName: 'Juan',
+  lastName: 'Dela Cruz',
+  roles: ['faculty'],
+  createdAt: new Date().toISOString(),
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>(() => {
     try {
@@ -31,6 +44,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     }
+
+    // DEV-ONLY: Default to mock authenticated user in dev mode for UI inspection
+    if (import.meta.env.DEV) {
+      return {
+        user: DEV_MOCK_USER,
+        token: 'dev-mock-token',
+        isAuthenticated: true,
+        isLoading: false,
+      };
+    }
+
     return {
       user: null,
       token: null,
@@ -68,6 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// oxlint-disable-next-line react/only-export-components
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {

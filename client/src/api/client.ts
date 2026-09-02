@@ -1,22 +1,23 @@
 import axios from 'axios';
 
 /**
- * Axios instance configured for the CCIS PMS API.
+ * Base Axios instance configured for the CCIS PMS API.
  *
- * - Base URL is set from the VITE_API_URL env variable or defaults to '/api'
- *   (which the Vite dev server proxies to http://localhost:5000).
- * - The request interceptor attaches the JWT token from localStorage.
- * - The response interceptor handles 401 (unauthorized) by clearing auth state.
+ * Configuration:
+ * - baseURL: VITE_API_URL environment variable, defaulting to '/api' (proxied by Vite dev server).
+ * - timeout: 15 seconds to prevent hanging requests.
+ * - Request Interceptor: Automatically attaches the Bearer JWT token from localStorage.
+ * - Response Interceptor: Handles 401 (unauthorized) globally by clearing session state.
  */
-
-const apiClient = axios.create({
+export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Attach JWT token to every request
+// Attach JWT token to outgoing requests
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -28,14 +29,13 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Handle 401 responses globally
+// Handle global responses and unauthorized state
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // Redirect to login if not already there
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
