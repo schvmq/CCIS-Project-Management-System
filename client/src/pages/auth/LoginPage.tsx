@@ -24,15 +24,24 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Replace with actual API call
+      // DEV-ONLY: Instant mock sign-in for development preview
+      if (import.meta.env.DEV) {
+        login('dev-mock-token', {
+          id: 'dev-user-01',
+          email: email || 'faculty@university.edu',
+          firstName: 'Juan',
+          lastName: 'Dela Cruz',
+          roles: ['faculty'],
+          createdAt: new Date().toISOString(),
+        });
+        navigate(from, { replace: true });
+        return;
+      }
+
+      // TODO: Replace with actual API call in Week 1
       // const response = await apiClient.post('/auth/login', { email, password });
       // login(response.data.token, response.data.user);
-
-      // Temporary: show not-implemented message
       setError('Login is not yet connected to the API. This will be implemented in Week 1.');
-      void login; // suppress unused warning
-      void navigate; // suppress unused warning
-      void from; // suppress unused warning
     } catch {
       setError('An error occurred. Please try again.');
     } finally {
