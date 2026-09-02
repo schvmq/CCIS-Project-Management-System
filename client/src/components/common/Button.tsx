@@ -26,7 +26,7 @@ export default function Button({
   const variantStyles = {
     primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-xs',
     secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400',
-    danger: 'bg-danger-500 text-white hover:bg-red-600 focus:ring-danger-500 shadow-xs',
+    danger: 'bg-danger-500 text-white hover:bg-danger-600 focus:ring-danger-500 shadow-xs',
     outline: 'border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-primary-500',
     ghost: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-gray-400',
   }[variant];
